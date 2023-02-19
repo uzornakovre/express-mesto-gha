@@ -7,11 +7,16 @@ router.get('/', (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
 
-router.post('/', (req, res) => {
-  console.log(req.body);
-  const { name, about } = req.body;
+router.get('/:userId', (req, res) => {
+  User.findById(req.params.userId)
+    .then(user => res.send({ data: user }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+});
 
-  User.create({ name, about })
+router.post('/', (req, res) => {
+  const { name, about, avatar } = req.body;
+
+  User.create({ name, about, avatar })
     .then(user => res.send({ data: user }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 });
