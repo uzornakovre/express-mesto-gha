@@ -17,13 +17,12 @@ const cardSchema = new mongoose.Schema({
   },
   // likes: {
   //   type:      String,
-  //   default:   [],
-  //   enum:      []
+  //   default:   []
   // },
-  // createdAt: {
-  //   type:      Date,
-  //   default:   Date.now
-  // }
+  createdAt: {
+    type:      Date,
+    default:   Date.now
+  }
 });
 
 module.exports = mongoose.model('card', cardSchema);
