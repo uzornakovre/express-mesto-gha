@@ -16,15 +16,27 @@ module.exports.createCard = (req, res) => {
 }
 
 module.exports.deleteCard = (req, res) => {
-  Card.deleteOne({ _id: req.params.cardId })
+  Card.findByIdAndRemove(req.params.cardId)
     .then(() => res.status(200).send({ message: 'Карточка удалена' }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 }
 
 module.exports.likeCard = (req, res) => {
-  return
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $addToSet: { likes: req.user._id } },
+    { new: true },
+  )
+    .then(() => res.status(200).send({ message: 'Лайк добавлен' }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 }
 
 module.exports.dislikeCard = (req, res) => {
-  return
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  )
+    .then(() => res.status(200).send({ message: 'Лайк удален' }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 }
