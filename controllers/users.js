@@ -15,7 +15,13 @@ module.exports.getUser = (req, res) => {
         res.status(404).send({ message: 'Пользователь с таким именем не найден' })
       }
     })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(400).send({ message: 'Некорректный ID' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка' });
+      }
+    })
 }
 
 module.exports.createUser = (req, res) => {
