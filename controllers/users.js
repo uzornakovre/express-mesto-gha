@@ -40,8 +40,17 @@ module.exports.createUser = (req, res) => {
 
 module.exports.updateUserInfo = (req, res) => {
   const { name, about } = req.body;
-  User.findByIdAndUpdate(req.user._id, { name: name, about: about })
-    .then(user => res.status(200).send({ data: user }))
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name: name, about: about },
+    {
+      new: true,
+      runValidators: true,
+      upsert: false
+  })
+    .then((user) => {
+      res.status(200).send({ data: user })
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Данные введены некорректно' });
@@ -53,7 +62,14 @@ module.exports.updateUserInfo = (req, res) => {
 
 module.exports.updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
-  User.findByIdAndUpdate(req.user._id, { avatar: avatar })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { avatar: avatar },
+    {
+      new: true,
+      runValidators: true,
+      upsert: true
+  })
     .then(user => res.status(200).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
