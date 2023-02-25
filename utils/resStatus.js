@@ -18,6 +18,7 @@ const ResStatus = {
     CODE: 404,
     USER_RESPONSE: { message: 'Пользователь с таким именем не найден' },
     CARD_RESPONSE: { message: 'Карточка не найдена' },
+    PAGE_RESPONSE: { message: 'Страницы не существует' },
   },
   INTERNAL: {
     CODE: 500,

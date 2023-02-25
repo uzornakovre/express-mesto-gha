@@ -3,6 +3,7 @@ const {
   OK,
   CREATED,
   INVALID_DATA,
+  NOT_FOUND,
   INTERNAL,
 } = require('../utils/resStatus');
 
@@ -16,9 +17,9 @@ module.exports.getUser = (req, res) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user) {
-        res.status(200).send({ data: user });
+        res.status(OK.CODE).send({ data: user });
       } else {
-        res.status(404).send({ message: 'Пользователь с таким именем не найден' });
+        res.status(NOT_FOUND.CODE).send(NOT_FOUND.USER_RESPONSE);
       }
     })
     .catch((err) => {
