@@ -9,8 +9,9 @@ const {
 
 module.exports.getCards = (req, res) => {
   Card.find({})
+    .populate(['owner', 'likes'])
     .then((cards) => res.status(OK.CODE).send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(() => res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE));
 };
 
 module.exports.createCard = (req, res) => {
@@ -76,7 +77,7 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (card) {
-        res.status(200).send(OK.DISLIKE_CARD_RESPONSE);
+        res.status(OK.CODE).send(OK.DISLIKE_CARD_RESPONSE);
       } else {
         res.status(NOT_FOUND.CODE).send(NOT_FOUND.CARD_RESPONSE);
       }
