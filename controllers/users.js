@@ -1,9 +1,15 @@
 const User = require('../models/user');
+const {
+  OK,
+  CREATED,
+  INVALID_DATA,
+  INTERNAL,
+} = require('../utils/resStatus');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
-    .then((users) => res.status(200).send({ data: users }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .then((users) => res.status(OK.CODE).send({ data: users }))
+    .catch(() => res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE));
 };
 
 module.exports.getUser = (req, res) => {
@@ -17,9 +23,9 @@ module.exports.getUser = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Некорректный ID' });
+        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
       }
     });
 };
@@ -28,12 +34,12 @@ module.exports.createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    .then((user) => res.status(201).send({ data: user }))
+    .then((user) => res.status(CREATED.CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Данные введены некорректно' });
+        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
       }
     });
 };
@@ -50,13 +56,13 @@ module.exports.updateUserInfo = (req, res) => {
     },
   )
     .then((user) => {
-      res.status(200).send({ data: user });
+      res.status(OK.CODE).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Данные введены некорректно' });
+        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
       }
     });
 };
@@ -72,12 +78,12 @@ module.exports.updateUserAvatar = (req, res) => {
       upsert: true,
     },
   )
-    .then((user) => res.status(200).send({ data: user }))
+    .then((user) => res.status(OK.CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Данные введены некорректно' });
+        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
       } else {
-        res.status(500).send({ message: 'Произошла ошибка' });
+        res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
       }
     });
 };
