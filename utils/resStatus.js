@@ -20,6 +20,10 @@ const ResStatus = {
     CARD_RESPONSE: { message: 'Карточка не найдена' },
     PAGE_RESPONSE: { message: 'Страницы не существует' },
   },
+  CONFLICT: {
+    CODE: 409,
+    EMAIL_RESPONSE: { message: 'Пользователь с таким email уже существует' },
+  },
   INTERNAL: {
     CODE: 500,
     RESPONSE: { message: 'Произошла ошибка' },

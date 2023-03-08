@@ -5,6 +5,7 @@ const {
   CREATED,
   INVALID_DATA,
   NOT_FOUND,
+  CONFLICT,
   INTERNAL,
 } = require('../utils/resStatus');
 
@@ -45,6 +46,8 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
+      } else if (err.code === 11000) {
+        res.status(CONFLICT.CODE).send(CONFLICT.EMAIL_RESPONSE);
       } else {
         res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
       }
