@@ -8,8 +8,8 @@ const {
   updateUserAvatar,
 } = require('../controllers/users');
 
-router.use(auth);
 router.get('/', getUsers);
+router.use(auth);
 router.get('/me', getCurrentUser);
 router.get('/:userId', getUser);
 router.patch('/me', updateUserInfo);
