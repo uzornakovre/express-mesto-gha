@@ -8,7 +8,7 @@ router.post('/', celebrate({
     password: Joi.string().required().min(4),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().uri().min(2),
+    avatar: Joi.string().uri({ scheme: [/https?:\/\//] }).min(2),
   }),
 }), createUser);
 
