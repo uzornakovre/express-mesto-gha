@@ -17,7 +17,7 @@ const ResStatus = {
   },
   UNAUTHORIZED: {
     CODE: 401,
-    RESPONSE: { message: 'Неправильные почта или пароль' },
+    RESPONSE: { message: 'Необходима авторизация' },
   },
   NOT_FOUND: {
     CODE: 404,
