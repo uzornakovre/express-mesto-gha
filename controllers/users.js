@@ -100,9 +100,36 @@ module.exports.login = (req, res) => {
   return User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-      res.status(OK.CODE).send({ token });
+      res.status(OK.CODE).send({ user, token });
     })
     .catch((err) => {
       res.status(UNAUTHORIZED.CODE).send({ message: err.message });
     });
+};
+
+module.exports.getCurrentUser = (req, res, next) => {
+  const { authorization } = req.headers;
+
+  if (!authorization || !authorization.startsWith('Bearer')) {
+    res.status(UNAUTHORIZED.CODE).send(UNAUTHORIZED.RESPONSE);
+  }
+
+  const token = authorization.replace('Bearer ', '');
+  let payload;
+
+  try {
+    payload = jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    res.status(UNAUTHORIZED.CODE).send(UNAUTHORIZED.RESPONSE);
+  }
+
+  User.findById(payload._id)
+    .then((user) => {
+      if (user) {
+        res.status(OK.CODE).send(user);
+      } else {
+        res.status(NOT_FOUND.CODE).send(NOT_FOUND.USER_RESPONSE);
+      }
+    })
+    .catch(next);
 };
