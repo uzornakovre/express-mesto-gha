@@ -5,6 +5,7 @@ const ResStatus = {
     DEL_CARD_RESPONSE: { message: 'Карточка удалена' },
     LIKE_CARD_RESPONSE: { message: 'Лайк добавлен' },
     DISLIKE_CARD_RESPONSE: { message: 'Лайк удален' },
+    AUTH_RESPONSE: { message: 'Авторизация прошла успешно!' },
   },
   CREATED: {
     CODE: 201,
@@ -13,6 +14,10 @@ const ResStatus = {
   INVALID_DATA: {
     CODE: 400,
     RESPONSE: { message: 'Данные введены некорректно' },
+  },
+  UNAUTHORIZED: {
+    CODE: 401,
+    RESPONSE: { message: 'Неправильные почта или пароль' },
   },
   NOT_FOUND: {
     CODE: 404,

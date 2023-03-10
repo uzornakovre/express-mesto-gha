@@ -1,21 +1,22 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
   OK,
   CREATED,
   INVALID_DATA,
+  UNAUTHORIZED,
   NOT_FOUND,
   CONFLICT,
-  INTERNAL,
 } = require('../utils/resStatus');
 
-module.exports.getUsers = (req, res) => {
+module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.status(OK.CODE).send({ data: users }))
-    .catch(() => res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE));
+    .catch(next);
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById(req.params.userId)
     .then((user) => {
       if (user) {
@@ -24,16 +25,10 @@ module.exports.getUser = (req, res) => {
         res.status(NOT_FOUND.CODE).send(NOT_FOUND.USER_RESPONSE);
       }
     })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
-      } else {
-        res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
-      }
-    });
+    .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     email, password, name, about, avatar,
   } = req.body;
@@ -49,12 +44,12 @@ module.exports.createUser = (req, res) => {
       } else if (err.code === 11000) {
         res.status(CONFLICT.CODE).send(CONFLICT.EMAIL_RESPONSE);
       } else {
-        res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
+        next(err);
       }
     });
 };
 
-module.exports.updateUserInfo = (req, res) => {
+module.exports.updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -72,12 +67,12 @@ module.exports.updateUserInfo = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
       } else {
-        res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
+        next(err);
       }
     });
 };
 
-module.exports.updateUserAvatar = (req, res) => {
+module.exports.updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -93,7 +88,20 @@ module.exports.updateUserAvatar = (req, res) => {
       if (err.name === 'ValidationError') {
         res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
       } else {
-        res.status(INTERNAL.CODE).send(INTERNAL.RESPONSE);
+        next(err);
       }
+    });
+};
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  return User.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.status(OK.CODE).send({ token });
+    })
+    .catch((err) => {
+      res.status(UNAUTHORIZED.CODE).send({ message: err.message });
     });
 };
