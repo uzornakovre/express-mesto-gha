@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const {
   OK,
@@ -95,18 +96,10 @@ module.exports.updateUserAvatar = (req, res, next) => {
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
 
-  User.findOne({ email })
+  return User.findUserByCredentials(email, password)
     .then((user) => {
-      if (!user) {
-        return Promise.reject(new Error(UNAUTHORIZED.RESPONSE.message));
-      }
-      return bcrypt.compare(password, user.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        return Promise.reject(new Error(UNAUTHORIZED.RESPONSE.message));
-      }
-      return res.status(OK.CODE).send(OK.AUTH_RESPONSE);
+      const token = jwt.sign({ _id: user._id }, 'some-secret-key', { expiresIn: '7d' });
+      res.status(OK.CODE).send({ token });
     })
     .catch((err) => {
       res.status(UNAUTHORIZED.CODE).send({ message: err.message });
