@@ -4,6 +4,7 @@ const {
   OK,
   CREATED,
   INVALID_DATA,
+  UNAUTHORIZED,
   NOT_FOUND,
   CONFLICT,
   INTERNAL,
@@ -112,9 +113,9 @@ module.exports.login = (req, res) => {
       if (!matched) {
         return Promise.reject(new Error('Неправильные почта или пароль'));
       }
-      res.send({ message: 'Всё верно!' });
+      return res.status(OK.CODE).res.send(OK.AUTH_RESPONSE);
     })
     .catch((err) => {
-      res.status(401).send({ message: err.message });
+      res.status(UNAUTHORIZED.CODE).send({ message: err.message });
     });
 };
