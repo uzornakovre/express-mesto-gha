@@ -3,9 +3,9 @@ const auth = require('../middlewares/auth');
 const {
   getUsers,
   getUser,
+  getCurrentUser,
   updateUserInfo,
   updateUserAvatar,
-  getCurrentUser,
 } = require('../controllers/users');
 
 router.use(auth);
