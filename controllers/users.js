@@ -113,22 +113,7 @@ module.exports.login = (req, res) => {
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization || !authorization.startsWith('Bearer')) {
-    res.status(UNAUTHORIZED.CODE).send(UNAUTHORIZED.RESPONSE);
-  }
-
-  const token = authorization.replace('Bearer ', '');
-  let payload;
-
-  try {
-    payload = jwt.verify(token, JWT_SECRET);
-  } catch (err) {
-    res.status(UNAUTHORIZED.CODE).send(UNAUTHORIZED.RESPONSE);
-  }
-
-  User.findById(payload._id)
+  User.findById(req.user._id)
     .then((user) => {
       if (user) {
         res.status(OK.CODE).send(user);
