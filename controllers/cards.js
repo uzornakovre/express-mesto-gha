@@ -34,7 +34,8 @@ module.exports.deleteCard = (req, res, next) => {
 
   Card.findById(cardId)
     .then((card) => {
-      if (card.owner === req.user._id) {
+      const cardOwner = String(card.owner);
+      if (cardOwner === req.user._id) {
         Card.deleteOne({ cardId })
           .then(() => {
             res.status(OK.CODE).send(OK.DEL_CARD_RESPONSE);
