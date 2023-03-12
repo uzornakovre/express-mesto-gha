@@ -34,8 +34,7 @@ module.exports.deleteCard = (req, res, next) => {
 
   Card.findById(cardId)
     .then((card) => {
-      const cardOwner = String(card.owner);
-      if (cardOwner === req.user._id) {
+      if (card && String(card.owner) === req.user._id) {
         Card.deleteOne({ cardId })
           .then(() => {
             res.status(OK.CODE).send(OK.DEL_CARD_RESPONSE);
@@ -43,7 +42,7 @@ module.exports.deleteCard = (req, res, next) => {
           .catch((err) => next(err));
       } else if (card) {
         res.status(FORBIDDEN.CODE).send(FORBIDDEN.RESPONSE);
-      } else {
+      } else if (!card) {
         res.status(NOT_FOUND.CODE).send(NOT_FOUND.CARD_RESPONSE);
       }
     })
