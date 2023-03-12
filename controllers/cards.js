@@ -4,6 +4,7 @@ const {
   CREATED,
   INVALID_DATA,
   NOT_FOUND,
+  FORBIDDEN,
 } = require('../utils/resStatus');
 
 module.exports.getCards = (req, res, next) => {
@@ -29,11 +30,19 @@ module.exports.createCard = (req, res, next) => {
 };
 
 module.exports.deleteCard = (req, res, next) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  const { cardId } = req.params;
+
+  Card.findById(cardId)
     .then((card) => {
-      if (card) {
-        res.status(OK.CODE).send(OK.DEL_CARD_RESPONSE);
-      } else {
+      if (card && String(card.owner) === req.user._id) {
+        Card.deleteOne({ cardId })
+          .then(() => {
+            res.status(OK.CODE).send(OK.DEL_CARD_RESPONSE);
+          })
+          .catch((err) => next(err));
+      } else if (card) {
+        res.status(FORBIDDEN.CODE).send(FORBIDDEN.RESPONSE);
+      } else if (!card) {
         res.status(NOT_FOUND.CODE).send(NOT_FOUND.CARD_RESPONSE);
       }
     })

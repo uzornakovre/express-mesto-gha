@@ -19,6 +19,10 @@ const ResStatus = {
     CODE: 401,
     RESPONSE: { message: 'Необходима авторизация' },
   },
+  FORBIDDEN: {
+    CODE: 403,
+    RESPONSE: { message: 'Доступ запрещен' },
+  },
   NOT_FOUND: {
     CODE: 404,
     USER_RESPONSE: { message: 'Пользователь с таким именем не найден' },
