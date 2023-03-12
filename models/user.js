@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
-const { urlValid } = require('../utils/validationRules');
+const { regexUrl } = require('../utils/validationRules');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    validate: urlValid,
+    validate: regexUrl,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
 });
