@@ -47,7 +47,7 @@ userSchema.statics.findUserByCredentials = function (email, password) {
       if (!user) {
         return Promise.reject({
           statusCode: UNAUTHORIZED.CODE,
-          message: UNAUTHORIZED.USER_MESSAGE,
+          message: UNAUTHORIZED.USER_RESPONSE.message,
         });
       }
       return bcrypt.compare(password, user.password)
@@ -55,7 +55,7 @@ userSchema.statics.findUserByCredentials = function (email, password) {
           if (!matched) {
             return Promise.reject({
               statusCode: UNAUTHORIZED.CODE,
-              message: UNAUTHORIZED.PASSWORD_MESSAGE,
+              message: UNAUTHORIZED.PASSWORD_RESPONSE.message,
             });
           }
           return user;
