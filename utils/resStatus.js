@@ -1,41 +1,43 @@
 const ResStatus = {
   OK: {
     CODE: 200,
-    RESPONSE: { message: 'Запрос успешно выполнен' },
-    DEL_CARD_RESPONSE: { message: 'Карточка удалена' },
-    LIKE_CARD_RESPONSE: { message: 'Лайк добавлен' },
-    DISLIKE_CARD_RESPONSE: { message: 'Лайк удален' },
-    AUTH_RESPONSE: { message: 'Авторизация прошла успешно!' },
+    MESSAGE: 'Запрос успешно выполнен',
+    DEL_CARD_MESSAGE: 'Карточка удалена',
+    LIKE_CARD_MESSAGE: 'Лайк добавлен',
+    DISLIKE_CARD_MESSAGE: 'Лайк удален',
+    AUTH_MESSAGE: 'Авторизация прошла успешно!',
   },
   CREATED: {
     CODE: 201,
-    RESPONSE: { message: 'Объект успешно создан' },
+    MESSAGE: 'Объект успешно создан',
   },
   INVALID_DATA: {
     CODE: 400,
-    RESPONSE: { message: 'Данные введены некорректно' },
+    MESSAGE: 'Данные введены некорректно',
   },
   UNAUTHORIZED: {
     CODE: 401,
-    RESPONSE: { message: 'Необходима авторизация' },
+    MESSAGE: 'Необходима авторизация',
+    USER_MESSAGE: 'Пользователь не найден',
+    PASSWORD_MESSAGE: 'Неправильные почта или пароль',
   },
   FORBIDDEN: {
     CODE: 403,
-    RESPONSE: { message: 'Доступ запрещен' },
+    MESSAGE: 'Доступ запрещен',
   },
   NOT_FOUND: {
     CODE: 404,
-    USER_RESPONSE: { message: 'Пользователь с таким именем не найден' },
-    CARD_RESPONSE: { message: 'Карточка не найдена' },
-    PAGE_RESPONSE: { message: 'Страницы не существует' },
+    USER_MESSAGE: 'Пользователь с таким именем не найден',
+    CARD_MESSAGE: 'Карточка не найдена',
+    PAGE_MESSAGE: 'Страницы не существует',
   },
   CONFLICT: {
     CODE: 409,
-    EMAIL_RESPONSE: { message: 'Пользователь с таким email уже существует' },
+    EMAIL_MESSAGE: 'Пользователь с таким email уже существует',
   },
   INTERNAL: {
     CODE: 500,
-    RESPONSE: { message: 'Произошла ошибка' },
+    MESSAGE: 'Произошла ошибка',
   },
 };
 
