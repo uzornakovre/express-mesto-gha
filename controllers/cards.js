@@ -22,7 +22,7 @@ module.exports.createCard = (req, res, next) => {
     .then((card) => res.status(CREATED.CODE).send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.RESPONSE });
+        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.MESSAGE });
       } else {
         next(err);
       }
@@ -37,18 +37,18 @@ module.exports.deleteCard = (req, res, next) => {
       if (card && String(card.owner) === req.user._id) {
         Card.deleteOne({ cardId })
           .then(() => {
-            res.status(OK.CODE).send(OK.DEL_CARD_RESPONSE);
+            res.status(OK.CODE).send({ message: FORBIDDEN.MESSAGE });
           })
           .catch((err) => next(err));
       } else if (card) {
-        next({ statusCode: FORBIDDEN.CODE, message: FORBIDDEN.RESPONSE });
+        next({ statusCode: FORBIDDEN.CODE, message: FORBIDDEN.MESSAGE });
       } else if (!card) {
-        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.CARD_RESPONSE });
+        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.CARD_MESSAGE });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.RESPONSE });
+        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.MESSAGE });
       } else {
         next(err);
       }
@@ -63,14 +63,14 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (card) {
-        res.status(OK.CODE).send(OK.LIKE_CARD_RESPONSE);
+        res.status(OK.CODE).send({ message: OK.LIKE_CARD_MESSAGE });
       } else {
-        res.status(NOT_FOUND.CODE).send(NOT_FOUND.CARD_RESPONSE);
+        res.status(NOT_FOUND.CODE).send({ message: NOT_FOUND.CARD_MESSAGE });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
+        res.status(INVALID_DATA.CODE).send({ message: INVALID_DATA.MESSAGE });
       } else {
         next(err);
       }
@@ -85,14 +85,14 @@ module.exports.dislikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (card) {
-        res.status(OK.CODE).send(OK.DISLIKE_CARD_RESPONSE);
+        res.status(OK.CODE).send({ message: OK.DISLIKE_CARD_MESSAGE });
       } else {
-        res.status(NOT_FOUND.CODE).send(NOT_FOUND.CARD_RESPONSE);
+        res.status(NOT_FOUND.CODE).send({ message: NOT_FOUND.CARD_MESSAGE });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
+        res.status(INVALID_DATA.CODE).send({ message: INVALID_DATA.MESSAGE });
       } else {
         next(err);
       }

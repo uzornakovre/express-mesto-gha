@@ -22,7 +22,7 @@ module.exports.getUser = (req, res, next) => {
       if (user) {
         res.status(OK.CODE).send({ data: user });
       } else {
-        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.USER_RESPONSE });
+        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.USER_MESSAGE });
       }
     })
     .catch(next);
@@ -45,9 +45,9 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.RESPONSE });
+        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.MESSAGE });
       } else if (err.code === 11000) {
-        next({ statusCode: CONFLICT.CODE, message: CONFLICT.EMAIL_RESPONSE });
+        next({ statusCode: CONFLICT.CODE, message: CONFLICT.EMAIL_MESSAGE });
       } else {
         next(err);
       }
@@ -70,7 +70,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
+        res.status(INVALID_DATA.CODE).send(INVALID_DATA.MESSAGE);
       } else {
         next(err);
       }
@@ -91,7 +91,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .then((user) => res.status(OK.CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.RESPONSE });
+        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.MESSAGE });
       } else {
         next(err);
       }
@@ -115,7 +115,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (user) {
         res.status(OK.CODE).send(user);
       } else {
-        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.USER_RESPONSE });
+        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.USER_MESSAGE });
       }
     })
     .catch(next);
