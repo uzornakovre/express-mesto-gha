@@ -1,7 +1,9 @@
+/* eslint-disable prefer-promise-reject-errors */
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const { regexUrl } = require('../utils/validationRules');
+const { UNAUTHORIZED } = require('../utils/resStatus');
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -43,12 +45,18 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Пользователь не найден'));
+        return Promise.reject({
+          statusCode: UNAUTHORIZED.CODE,
+          message: UNAUTHORIZED.USER_MESSAGE,
+        });
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new Error('Неправильные почта или пароль'));
+            return Promise.reject({
+              statusCode: UNAUTHORIZED.CODE,
+              message: UNAUTHORIZED.PASSWORD_MESSAGE,
+            });
           }
           return user;
         });

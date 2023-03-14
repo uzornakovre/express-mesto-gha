@@ -1,9 +1,11 @@
+const { INTERNAL } = require('../utils/resStatus');
+
 const errorHandler = (err, req, res, next) => {
   const statusCode = err.statusCode || 500;
 
   let message;
-  if (statusCode === 500) {
-    message = `На сервере произошла ошибка: ${err.message}`;
+  if (statusCode === INTERNAL.CODE) {
+    message = INTERNAL.MESSAGE;
   } else {
     message = err.message;
   }

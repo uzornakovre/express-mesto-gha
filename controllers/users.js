@@ -6,7 +6,6 @@ const {
   OK,
   CREATED,
   INVALID_DATA,
-  UNAUTHORIZED,
   NOT_FOUND,
   CONFLICT,
 } = require('../utils/resStatus');
@@ -23,7 +22,7 @@ module.exports.getUser = (req, res, next) => {
       if (user) {
         res.status(OK.CODE).send({ data: user });
       } else {
-        res.status(NOT_FOUND.CODE).send(NOT_FOUND.USER_RESPONSE);
+        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.USER_MESSAGE });
       }
     })
     .catch(next);
@@ -46,9 +45,9 @@ module.exports.createUser = (req, res, next) => {
     }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
+        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.MESSAGE });
       } else if (err.code === 11000) {
-        res.status(CONFLICT.CODE).send(CONFLICT.EMAIL_RESPONSE);
+        next({ statusCode: CONFLICT.CODE, message: CONFLICT.EMAIL_MESSAGE });
       } else {
         next(err);
       }
@@ -71,7 +70,7 @@ module.exports.updateUserInfo = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
+        res.status(INVALID_DATA.CODE).send(INVALID_DATA.MESSAGE);
       } else {
         next(err);
       }
@@ -92,14 +91,14 @@ module.exports.updateUserAvatar = (req, res, next) => {
     .then((user) => res.status(OK.CODE).send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(INVALID_DATA.CODE).send(INVALID_DATA.RESPONSE);
+        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.MESSAGE });
       } else {
         next(err);
       }
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -107,9 +106,7 @@ module.exports.login = (req, res) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
       res.status(OK.CODE).send({ token });
     })
-    .catch((err) => {
-      res.status(UNAUTHORIZED.CODE).send({ message: err.message });
-    });
+    .catch(next);
 };
 
 module.exports.getCurrentUser = (req, res, next) => {
@@ -118,7 +115,7 @@ module.exports.getCurrentUser = (req, res, next) => {
       if (user) {
         res.status(OK.CODE).send(user);
       } else {
-        res.status(NOT_FOUND.CODE).send(NOT_FOUND.USER_RESPONSE);
+        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.USER_MESSAGE });
       }
     })
     .catch(next);
