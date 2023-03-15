@@ -65,12 +65,12 @@ module.exports.likeCard = (req, res, next) => {
       if (card) {
         res.status(OK.CODE).send({ message: OK.LIKE_CARD_MESSAGE });
       } else {
-        res.status(NOT_FOUND.CODE).send({ message: NOT_FOUND.CARD_MESSAGE });
+        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.CARD_MESSAGE });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(INVALID_DATA.CODE).send({ message: INVALID_DATA.MESSAGE });
+        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.MESSAGE });
       } else {
         next(err);
       }
@@ -87,12 +87,12 @@ module.exports.dislikeCard = (req, res, next) => {
       if (card) {
         res.status(OK.CODE).send({ message: OK.DISLIKE_CARD_MESSAGE });
       } else {
-        res.status(NOT_FOUND.CODE).send({ message: NOT_FOUND.CARD_MESSAGE });
+        next({ statusCode: NOT_FOUND.CODE, message: NOT_FOUND.CARD_MESSAGE });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(INVALID_DATA.CODE).send({ message: INVALID_DATA.MESSAGE });
+        next({ statusCode: INVALID_DATA.CODE, message: INVALID_DATA.MESSAGE });
       } else {
         next(err);
       }
